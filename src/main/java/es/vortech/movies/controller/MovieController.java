@@ -1,5 +1,6 @@
 package es.vortech.movies.controller;
 
+import es.vortech.movies.dto.MovieDto;
 import es.vortech.movies.entity.Actor;
 import es.vortech.movies.entity.Movie;
 import es.vortech.movies.service.MovieService;
@@ -8,12 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @SwaggerDefinition
@@ -44,7 +44,17 @@ public class MovieController {
 
     @ApiOperation(value = "Return all movies")
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Movie>> retrieveActors() {
+    public ResponseEntity<List<MovieDto>> retrieveMovies() {
         return new ResponseEntity<>(service.retrieveMovies(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Return specific movie")
+    @RequestMapping(path="/{id}", method = RequestMethod.GET)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Movie no found")
+    })
+    public ResponseEntity<Movie> retrieveMovie(@PathVariable("id") Long id) {
+        Optional<Movie> movie = service.retrieveMovie(id);
+        return movie.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -1,6 +1,5 @@
 package es.vortech.movies.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import es.vortech.movies.MoviesApplication;
 import es.vortech.movies.entity.Actor;
 import es.vortech.movies.entity.Movie;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MoviesApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class MovieControllerTest {
+public class MovieControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -123,6 +121,41 @@ class MovieControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().length).isEqualTo(1);
+    }
+
+    @Test
+    void retrieveOne() {
+        //Given
+        Movie movie = new Movie();
+        movie.setOscars(0);
+        movie.setTitle("Covid World Tour 2020");
+        movie.setYear(2020);
+        movie.setActors(new ArrayList<>());
+        Actor will = new Actor();
+        will.setId(1L);
+        will.setName("Will Smith");
+        movie.getActors().add(will);
+        repository.save(movie);
+
+        //When
+        ResponseEntity<Movie> response = restTemplate.getForEntity("/api/movies/1", Movie.class);
+
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+    }
+
+    @Test
+    void retrieveOneFailed() {
+        //Given
+        repository.deleteAll();
+
+        //When
+        ResponseEntity<Movie> response = restTemplate.getForEntity("/api/movies/1", Movie.class);
+
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).isNull();
     }
 
 

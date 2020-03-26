@@ -1,6 +1,5 @@
 package es.vortech.movies.configuration;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -24,24 +23,12 @@ public class RestExceptionHandler {
         return ResponseEntity.badRequest().build();
     }
 
-    @ExceptionHandler({InvalidArgumentException.class})
-    public ResponseEntity handleInvalidArgumentException(InvalidArgumentException e) {
-        LOCAL_LOGGER.warn(e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-    }
-
     @ExceptionHandler({ RuntimeException.class })
     public ResponseEntity handleConstraintViolation(RuntimeException e) {
         ResponseEntity response;
         if (e instanceof ConstraintViolationException) {
             response = ResponseEntity.badRequest().build();
             return response;
-        } else if (e instanceof ValidationException) {
-            if (e.getCause() instanceof InvalidArgumentException) {
-                response = handleInvalidArgumentException((InvalidArgumentException) e.getCause());
-            } else {
-                response = ResponseEntity.badRequest().build();
-            }
         } else {
             response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
