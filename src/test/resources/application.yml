@@ -7,10 +7,8 @@ spring:
     username: sa
     password: password
     driverClassName: org.h2.Driver
+    initialization-mode: always
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
   application:
-    name: addi
-
-server:
-  port : 8081
+    name: movie

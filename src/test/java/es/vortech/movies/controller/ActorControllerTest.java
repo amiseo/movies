@@ -26,6 +26,6 @@ class ActorControllerTest {
         ResponseEntity<Actor[]> response = restTemplate.getForEntity("/api/actors", Actor[].class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().length).isEqualTo(0);
+        assertThat(response.getBody().length).isEqualTo(3);
     }
 }
