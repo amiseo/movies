@@ -18,4 +18,9 @@ public class MovieServiceImpl implements MovieService {
     public Movie save(Movie movie) {
         return repository.save(movie);
     }
+
+    @Override
+    public Iterable<Movie> retrieveMovies() {
+        return repository.findAll();
+    }
 }

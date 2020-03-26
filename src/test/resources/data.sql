@@ -1,3 +1,5 @@
+TRUNCATE TABLE actor;
+
 INSERT INTO actor
     (id, name)
 VALUES

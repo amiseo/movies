@@ -10,4 +10,6 @@ import javax.validation.constraints.NotNull;
 public interface MovieService {
 
     Movie save(@NotNull @Valid Movie movie);
+
+    Iterable<Movie> retrieveMovies();
 }

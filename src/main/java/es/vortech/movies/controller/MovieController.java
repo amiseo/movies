@@ -1,9 +1,11 @@
 package es.vortech.movies.controller;
 
+import es.vortech.movies.entity.Actor;
 import es.vortech.movies.entity.Movie;
 import es.vortech.movies.service.MovieService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,9 +37,14 @@ public class MovieController {
     })
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Void> save(@RequestBody Movie request) {
-        System.out.println(servletContextPath);
         Movie movie = service.save(request);
         return ResponseEntity.created(URI.create(servletContextPath.concat("/").concat(movie.getId().toString())))
                 .build();
+    }
+
+    @ApiOperation(value = "Return all movies")
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<Iterable<Movie>> retrieveActors() {
+        return new ResponseEntity<>(service.retrieveMovies(), HttpStatus.OK);
     }
 }
